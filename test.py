@@ -304,7 +304,7 @@ def Run() :
                     lineall = Lineall()
                     DownAll(lineall)
 
-                blocknum = 0 #randint(0, 6)
+                blocknum = randint(0, 6)
                 noncollision = True
                 InsertAreaBlock(blocknum)
                 blocklocation = [0, 3]
