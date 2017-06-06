@@ -267,11 +267,11 @@ def DownAll(lineall) :
 
     for row in range(rows) :
         print(area[row])
-    print("area")
+    #print("area")
 
     for row in range(rows) :
         print(area2[row])
-    print("area2")
+    #print("area2")
 
     for col in range(10) : 
         area[lineall][col] = 0
@@ -285,7 +285,7 @@ def DownAll(lineall) :
 
     for row in range(rows) :
         print(area[row])
-    print("downall")
+    #print("downall")
 
 
 def Run() : 
@@ -351,9 +351,9 @@ def Run() :
 
             time.sleep(float(0.1)/speed/speed_up * 3)
 
-            for row in range(rows) :
+            '''for row in range(rows) :
                 print(area[row])
-            print("Cut")
+            print("Cut")'''
 
             #if not hasattr(event, 'key') : 
             #    continue
