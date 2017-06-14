@@ -116,11 +116,8 @@ def RawEnd(blocknum, blockstate) :
 
 def ColEnd(blocknum, blockstate) : 
     end = 0
-    for row in range(len(tetrominoes[blocknum][blockstate])) :
-        for col in range(4) : 
-            if tetrominoes[blocknum][blockstate] == 1 :
-                if end < col : 
-                    end = col
+    for col in range(len(tetrominoes[blocknum][blockstate][0])) : 
+        end += 1
     return end
 
 def DrawBlock() :
@@ -263,32 +260,19 @@ def Lineall() :
 
     return 0
 
-def DownAll(lineall) :
-    area2 = area
-    row2 = 0
+def DownAll(rowsearch) :
+    line = 0
+    rowsearch = 0
+    for col in range(cols) :
+        area[rowsearch][col] = 0
 
-    for row in range(rows) :
-        print(area[row])
-    #print("area")
-
-    for row in range(rows) :
-        print(area2[row])
-    #print("area2")
-
-    for col in range(10) : 
-        area[lineall][col] = 0
-
-    for row in range(lineall + 1) : 
-        for col in range(10) : 
-            row2 = 19 - row
-            if row2 == 0 :
-                break
-            area[row2][col] = area2[row2 - 1][col]
-
-    for row in range(rows) :
-        print(area[row])
-    #print("downall")
-
+    for row in range(rowsearch) : 
+        for col in range(cols) :
+            backrow = rowsearch - row - 1
+            if (backrow == 0) :
+                area[0][col] = 0
+            else : 
+                area[backrow][col] = area[backrow - 1][col]
 
 def Run() : 
     gameover = False
@@ -303,11 +287,13 @@ def Run() :
             spacecheck = 0
 
             if (noncollision == False) :
-                while Lineall() != 0 : 
-                    lineall = Lineall()
+                lineall = Lineall()
+                while (lineall != 0) : 
                     DownAll(lineall)
+                    lineall = Lineall()
+                #Downline()
 
-                blocknum = randint(0, 6)
+                blocknum = 0#randint(0, 6)
                 noncollision = True
                 InsertAreaBlock(blocknum)
                 blocklocation = [0, 3]
@@ -328,8 +314,7 @@ def Run() :
                     DrawBlock()
 
                 elif event.key == K_RIGHT :
-                    colend = ColEnd(blocknum, blockstate)
-                    if (blocklocation[1] < 9 - colend and blocknum == 0) : 
+                    if (blocklocation[1] < 10 - ColEnd(blocknum, blockstate)) : 
                         temp = blockstate
                         blockstate = Move(blocklocation, blocknum, blockstate, 1)
                         blocklocation[1] += 1

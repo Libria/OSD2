@@ -8,3 +8,14 @@ Documents
 
 > **project2**
 >
+>  <img src="http://i64.tinypic.com/amphq8.png" height = "800" width = "400">
+> - Simple Tetris
+>
+> **Function**
+> - Just Simple Tetris
+> > - Rotation block
+> > - Drop block
+> > - Drop block speedly
+> > - When top of horizion is fill, game over
+> > - Move block
+

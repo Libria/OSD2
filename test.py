@@ -295,10 +295,6 @@ def Run() :
     noncollision = False
     while not gameover :
         for event in pygame.event.get() :
-            if event.type == pygame.QUIT :
-                pygame.quit()
-                sys.exit()
-
             speed_up = 1
             spacecheck = 0
 
@@ -321,43 +317,43 @@ def Run() :
             CleanUp()
             DrawBlock()
 
+            if event.type == pygame.QUIT :
+                pygame.quit()
+                sys.exit()
             if event.type == pygame.KEYDOWN :
                 if event.key == K_UP :
                     blockstate = Rotation(blocklocation, blocknum, blockstate)
                     CleanUp()
                     DrawBlock()
-
-                elif event.key == K_RIGHT :
-                    colend = ColEnd(blocknum, blockstate)
-                    if (blocklocation[1] < 9 - colend and blocknum == 0) : 
-                        temp = blockstate
-                        blockstate = Move(blocklocation, blocknum, blockstate, 1)
-                        blocklocation[1] += 1
-                        blockstate = temp
-                        CleanUp()
-                        DrawBlock()
-
-                elif event.key == K_LEFT :
-                    if blocklocation[1] > 0 :
-                        temp = blockstate
-                        blockstate = Move(blocklocation, blocknum, blockstate, -1)
-                        blocklocation[1] -= 1
-                        blockstate = temp
-                        CleanUp()
-                        DrawBlock()
-                elif event.key == K_DOWN :
-                    speed_up = 10
-                elif event.key == K_SPACE : 
-                    downboolean2 = DownBlock(blocklocation, blocknum, blockstate)
-                    blocklocation[0] += 1
-                    while (downboolean2) :
-                        downboolean2 = DownBlock(blocklocation, blocknum, blockstate)
-                        blocklocation[0] += 1
-                        if (blocklocation[0] == 20 - RawEnd(blocknum, blockstate)) : 
-                            break
-                    spacecheck = 1
+            elif event.key == K_RIGHT :
+                if (blocklocation[1] != 10 - ColEnd(blocknum, blockstate)) : 
+                    temp = blockstate
+                    blockstate = Move(blocklocation, blocknum, blockstate, 1)
+                    blocklocation[1] += 1
+                    blockstate = temp
                     CleanUp()
                     DrawBlock()
+            elif event.key == K_LEFT :
+                if blocklocation[1] > 0 :
+                    temp = blockstate
+                    blockstate = Move(blocklocation, blocknum, blockstate, -1)
+                    blocklocation[1] -= 1
+                    blockstate = temp
+                    CleanUp()
+                    DrawBlock()
+            elif event.key == K_DOWN :
+                speed_up = 10
+            elif event.key == K_SPACE : 
+                downboolean2 = DownBlock(blocklocation, blocknum, blockstate)
+                blocklocation[0] += 1
+                while (downboolean2) :
+                    downboolean2 = DownBlock(blocklocation, blocknum, blockstate)
+                    blocklocation[0] += 1
+                    if (blocklocation[0] == 20 - RawEnd(blocknum, blockstate)) : 
+                        break
+                spacecheck = 1
+                CleanUp()
+                DrawBlock()
 
             if spacecheck == 0 :
                 downboolean = DownBlock(blocklocation, blocknum, blockstate)
