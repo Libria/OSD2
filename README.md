@@ -9,8 +9,8 @@ Documents
 > **project2**
 >
 > <img src="http://i64.tinypic.com/amphq8.png" height = "400" width = "200">
-> - Tetris
-> - Simple Tetris
+> Tetris
+> Simple Tetris
 >
 > **Function**
 > - Just Simple Tetris
