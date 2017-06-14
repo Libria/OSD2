@@ -10,11 +10,11 @@ pygame.display.set_caption('OSD2 Tetrix')
 
 rows, cols = 20, 10
 area = [[0 for col in range(cols)] for row in range(rows)]
-screen = pygame.display.set_mode((cols*30 + 250 ,rows*30 + 10),0,32)
+screen = pygame.display.set_mode((cols*30 ,rows*30 + 10),0,32) # +250
 background = pygame.Surface(screen.get_size())
 background = background.convert()
 background.fill((10, 10, 10))
-speed = 1
+speed = 0.5
 
 # 블럭들
 tetrominoes = [0, 0, 0, 0, 0, 0, 0]
@@ -23,104 +23,96 @@ tetrominoes[0]=[[
                 [1,1,1,1]],
 
                 [
-                [0,1,0,0],
-                [0,1,0,0],
-                [0,1,0,0],
-                [0,1,0,0]]]
+                [1],
+                [1],
+                [1],
+                [1]]]
 #colors[0]=0x00FFFF
 # T : ㅗ, purple 컬러
 tetrominoes[1]=[[
-                [1,1,1,0],
-                [0,1,0,0]],
+                [1,1,1],
+                [0,1,0]],
 
                 [
-                [0,1,0,0],
-                [1,1,0,0],
-                [0,1,0,0]],
+                [0,1],
+                [1,1],
+                [0,1]],
 
                 [
-                [0,1,0,0],
-                [1,1,1,0]],
+                [0,1,0],
+                [1,1,1]],
 
                 [
-                [0,1,0,0],
-                [0,1,1,0],
-                [0,1,0,0]]]
+                [1,0],
+                [1,1],
+                [1,0]]]
 #colors[1]=0x767676
 # L : ㄱ회전, orange 컬러
 tetrominoes[2]=[[
-                [1,1,1,0],
-                [1,0,0,0]],
+                [1,1,1],
+                [1,0,0]],
 
                 [
-                [1,1,0,0],
-                [0,1,0,0],
-                [0,1,0,0]],
+                [1,1],
+                [0,1],
+                [0,1]],
 
                 [
-                [0,0,1,0],
-                [1,1,1,0]],
+                [0,0,1],
+                [1,1,1]],
 
                 [
-                [0,1,0,0],
-                [0,1,0,0],
-                [0,1,1,0]]]
+                [1,0],
+                [1,0],
+                [1,1]]]
 #colors[2]=0xFFA500
 # J : ㄴ, blue 컬러
 tetrominoes[3]=[[
-                [1,0,0,0],
-                [1,1,1,0]],
+                [1,0,0],
+                [1,1,1]],
 
                 [
-                [0,1,1,0],
-                [0,1,0,0],
-                [0,1,0,0]],
+                [1,1],
+                [1,0],
+                [1,0]],
 
                 [
-                [1,1,1,0],
-                [0,0,1,0]],
+                [1,1,1],
+                [0,0,1]],
 
                 [
-                [0,1,0,0],
-                [0,1,0,0],
-                [1,1,0,0]]]
+                [0,1],
+                [0,1],
+                [1,1]]]
 #colors[3]=0x0000FF
 # Z : z, red 컬러
 tetrominoes[4]=[[
-                [1,1,0,0],
-                [0,1,1,0]],
+                [1,1,0],
+                [0,1,1]],
 
                 [
-                [0,0,1,0],
-                [0,1,1,0],
-                [0,1,0,0],
-                [0,0,0,0]]]
+                [0,1],
+                [1,1],
+                [1,0]]]
 #colors[4]=0xFF0000
 # S : 벼락, green 컬러
 tetrominoes[5]=[[
-                [0,1,1,0],
-                [1,1,0,0]],
+                [0,1,1],
+                [1,1,0]],
 
                 [
-                [0,1,0,0],
-                [0,1,1,0],
-                [0,0,1,0]]]
+                [1,0],
+                [1,1],
+                [0,1]]]
 #colors[5]=0x00FF00
 # O : 네모, yellow 컬러
 tetrominoes[6]=[[
-                [0,1,1,0],
-                [0,1,1,0]]]
+                [1,1],
+                [1,1]]]
 #colors[6]=0xFFFF00
 
-def ColStart(blocknum, blockstate) :
-    start = 3
-    for row in range(len(tetrominoes[blocknum][blockstate])) :
-        for col in range(4) : 
-            if tetrominoes[blocknum][blockstate] == 1 :
-                if start > col : 
-                    start = col
-    return start
-
+def RawEnd(blocknum, blockstate) :
+    return len(tetrominoes[blocknum][blockstate])
 
 def ColEnd(blocknum, blockstate) : 
     end = 0
@@ -148,17 +140,19 @@ def CleanUp() :
 
 def InsertAreaBlock(num) :
     tet = tetrominoes[num][0]
-    tetlen = len(tetrominoes[num][0])
+    tetrow = len(tetrominoes[num][0])
+    tetcol = len(tetrominoes[num][0][0])
     row = 0
 
-    while (tetlen > 0) :
-        for col in range(4) : 
+    while (tetrow > 0) :
+        for col in range(tetcol) : 
                 area[0 + row][3 + col] = area[0 + row][3 + col] + tet[row][col]
-        tetlen = tetlen - 1
+        tetrow = tetrow - 1
         row = row + 1
 
 def DownBlock(blocklocation, blocknum, blockstate) :
     tet = tetrominoes[blocknum][blockstate]
+    tetcol = len(tetrominoes[blocknum][blockstate][0])
     tetlen = len(tet)
     row = 0
     x = blocklocation[0]
@@ -167,13 +161,13 @@ def DownBlock(blocklocation, blocknum, blockstate) :
     if (x + tetlen == 20) :
         return False
 
-    for col in range(4) : 
+    for col in range(tetcol) : 
         if (x + tetlen < 20 and tet[tetlen - 1][col] > 0) :
             if (area[x + tetlen][y + col] > 0) :
                 return False
 
     while (tetlen > 0) :
-        for col in range(4) : 
+        for col in range(tetcol) : 
                 area[x + row][y + col] = area[x + row][y + col] - tet[row][col]
         tetlen = tetlen - 1
         row = row + 1
@@ -181,7 +175,7 @@ def DownBlock(blocklocation, blocknum, blockstate) :
     tetlen = len(tet)
     row = 0
     while (tetlen > 0) :
-        for col in range(4) : 
+        for col in range(tetcol) : 
                 area[x + 1 + row][y + col] = area[x + 1 + row][y + col] + tet[row][col]
         tetlen = tetlen - 1
         row = row + 1
@@ -198,6 +192,7 @@ def CheckHorizon(blocknum, blocklocation) :
 
 def Rotation(blocklocation, blocknum, blockstate) :
     rotatelen = len(tetrominoes[blocknum])
+    tetcol = len(tetrominoes[blocknum][blockstate][0])
     x = blocklocation[0]
     y = blocklocation[1]
 
@@ -209,28 +204,24 @@ def Rotation(blocklocation, blocknum, blockstate) :
 
     tet = tetrominoes[blocknum][blockstate]
     tetlen = len(tet)
-    row = 0
 
-    while (tetlen > 0) :
-        for col in range(4) : 
+    for row in range(tetlen) :
+        for col in range(tetcol) : 
             area[x + row][y + col] = area[x + row][y + col] - tet[row][col]
-        tetlen = tetlen - 1
-        row = row + 1
 
     tet = tetrominoes[blocknum][blockstate2]
+    tetcol = len(tetrominoes[blocknum][blockstate2][0])
     tetlen = len(tet)
-    row = 0
 
-    while (tetlen > 0) :
-        for col in range(4) : 
+    for row in range(tetlen) :
+        for col in range(tetcol) : 
                 area[x + row][y + col] = area[x + row][y + col] + tet[row][col]
-        tetlen = tetlen - 1
-        row = row + 1
 
     return blockstate2
 
 def Move(blocklocation, blocknum, blockstate, way) :
     rotatelen = len(tetrominoes[blocknum])
+    tetcol = len(tetrominoes[blocknum][blockstate][0])
     x = blocklocation[0]
     y = blocklocation[1]
 
@@ -239,7 +230,7 @@ def Move(blocklocation, blocknum, blockstate, way) :
     row = 0
 
     while (tetlen > 0) :
-        for col in range(4) : 
+        for col in range(tetcol) : 
                 area[x + row][y + col] = area[x + row][y + col] - tet[row][col]
         tetlen = tetlen - 1
         row = row + 1
@@ -249,7 +240,7 @@ def Move(blocklocation, blocknum, blockstate, way) :
     row = 0
 
     while (tetlen > 0) :
-        for col in range(4) : 
+        for col in range(tetcol) : 
                 area[x + row][y + col + way] = area[x + row][y + col + way] + tet[row][col]
         tetlen = tetlen - 1
         row = row + 1
@@ -274,15 +265,30 @@ def Lineall() :
 
 def DownAll(lineall) :
     area2 = area
+    row2 = 0
 
-    for row in range(0, lineall + 1) :
-        for col in range(10) :
-            area[row][col] = 0
+    for row in range(rows) :
+        print(area[row])
+    #print("area")
 
-    for row in range(0, lineall + 1) :
-        for col in range(10) :
-            if row + 1 < 20 : 
-                area[row + 1][col] = area2[row][col]
+    for row in range(rows) :
+        print(area2[row])
+    #print("area2")
+
+    for col in range(10) : 
+        area[lineall][col] = 0
+
+    for row in range(lineall + 1) : 
+        for col in range(10) : 
+            row2 = 19 - row
+            if row2 == 0 :
+                break
+            area[row2][col] = area2[row2 - 1][col]
+
+    for row in range(rows) :
+        print(area[row])
+    #print("downall")
+
 
 def Run() : 
     gameover = False
@@ -294,17 +300,18 @@ def Run() :
                 sys.exit()
 
             speed_up = 1
+            spacecheck = 0
 
             if (noncollision == False) :
-                blocknum = 6#randint(0, 6)
+                while Lineall() != 0 : 
+                    lineall = Lineall()
+                    DownAll(lineall)
+
+                blocknum = randint(0, 6)
                 noncollision = True
                 InsertAreaBlock(blocknum)
                 blocklocation = [0, 3]
                 blockstate = 0
-
-                while Lineall() != 0 : 
-                    lineall = Lineall()
-                    DownAll(lineall)
 
             if not CheckHorizon(blocknum, blocklocation) :
                 noncollision = False
@@ -321,38 +328,49 @@ def Run() :
                     DrawBlock()
 
                 elif event.key == K_RIGHT :
-                    temp = blockstate
-                    blockstate = Move(blocklocation, blocknum, blockstate, 1)
-                    blocklocation[1] += 1
-                    blockstate = temp
-                    CleanUp()
-                    DrawBlock()
+                    colend = ColEnd(blocknum, blockstate)
+                    if (blocklocation[1] < 9 - colend and blocknum == 0) : 
+                        temp = blockstate
+                        blockstate = Move(blocklocation, blocknum, blockstate, 1)
+                        blocklocation[1] += 1
+                        blockstate = temp
+                        CleanUp()
+                        DrawBlock()
 
                 elif event.key == K_LEFT :
-                    temp = blockstate
-                    blockstate = Move(blocklocation, blocknum, blockstate, -1)
-                    blocklocation[1] -= 1
-                    blockstate = temp
+                    if blocklocation[1] > 0 :
+                        temp = blockstate
+                        blockstate = Move(blocklocation, blocknum, blockstate, -1)
+                        blocklocation[1] -= 1
+                        blockstate = temp
+                        CleanUp()
+                        DrawBlock()
+                elif event.key == K_DOWN :
+                    speed_up = 10
+                elif event.key == K_SPACE : 
+                    downboolean2 = DownBlock(blocklocation, blocknum, blockstate)
+                    blocklocation[0] += 1
+                    while (downboolean2) :
+                        downboolean2 = DownBlock(blocklocation, blocknum, blockstate)
+                        blocklocation[0] += 1
+                        if (blocklocation[0] == 20 - RawEnd(blocknum, blockstate)) : 
+                            break
+                    spacecheck = 1
                     CleanUp()
                     DrawBlock()
 
-            #downboolean = DownBlock(blocklocation, blocknum, blockstate)
-            #if downboolean :
-            #    blocklocation[0] += 1
-            #elif not downboolean :
-            #    noncollision = False
+            if spacecheck == 0 :
+                downboolean = DownBlock(blocklocation, blocknum, blockstate)
+                if downboolean :
+                  blocklocation[0] += 1
+                elif not downboolean :
+                  noncollision = False
 
             time.sleep(float(0.1)/speed/speed_up * 3)
 
-            '''downboolean = DownBlock(blocklocation, blocknum, blockstate)
-            if downboolean :
-                blocklocation[0] += 1
-            elif not downboolean :
-                noncollision = False
-
-            for row in range(rows) :
-                print(area[row])
-            print("Cut")'''
+            #for row in range(rows) :
+            #    print(area[row])
+            #print("Cut")
 
             #if not hasattr(event, 'key') : 
             #    continue

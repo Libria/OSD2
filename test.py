@@ -10,11 +10,11 @@ pygame.display.set_caption('OSD2 Tetrix')
 
 rows, cols = 20, 10
 area = [[0 for col in range(cols)] for row in range(rows)]
-screen = pygame.display.set_mode((cols*30 + 250 ,rows*30 + 10),0,32)
+screen = pygame.display.set_mode((cols*30 ,rows*30 + 10),0,32) # +250
 background = pygame.Surface(screen.get_size())
 background = background.convert()
 background.fill((10, 10, 10))
-speed = 1
+speed = 0.5
 
 # 블럭들
 tetrominoes = [0, 0, 0, 0, 0, 0, 0]
@@ -111,6 +111,8 @@ tetrominoes[6]=[[
                 [1,1]]]
 #colors[6]=0xFFFF00
 
+def RawEnd(blocknum, blockstate) :
+    return len(tetrominoes[blocknum][blockstate])
 
 def ColEnd(blocknum, blockstate) : 
     end = 0
@@ -298,6 +300,7 @@ def Run() :
                 sys.exit()
 
             speed_up = 1
+            spacecheck = 0
 
             if (noncollision == False) :
                 while Lineall() != 0 : 
@@ -326,7 +329,7 @@ def Run() :
 
                 elif event.key == K_RIGHT :
                     colend = ColEnd(blocknum, blockstate)
-                    if (colend + blocklocation[1] < 7 and blocknum != 0) or (colend + blocklocation[1] < 6 and blocknum == 0) : 
+                    if (blocklocation[1] < 9 - colend and blocknum == 0) : 
                         temp = blockstate
                         blockstate = Move(blocklocation, blocknum, blockstate, 1)
                         blocklocation[1] += 1
@@ -342,18 +345,32 @@ def Run() :
                         blockstate = temp
                         CleanUp()
                         DrawBlock()
+                elif event.key == K_DOWN :
+                    speed_up = 10
+                elif event.key == K_SPACE : 
+                    downboolean2 = DownBlock(blocklocation, blocknum, blockstate)
+                    blocklocation[0] += 1
+                    while (downboolean2) :
+                        downboolean2 = DownBlock(blocklocation, blocknum, blockstate)
+                        blocklocation[0] += 1
+                        if (blocklocation[0] == 20 - RawEnd(blocknum, blockstate)) : 
+                            break
+                    spacecheck = 1
+                    CleanUp()
+                    DrawBlock()
 
-            downboolean = DownBlock(blocklocation, blocknum, blockstate)
-            if downboolean :
-                blocklocation[0] += 1
-            elif not downboolean :
-                noncollision = False
+            if spacecheck == 0 :
+                downboolean = DownBlock(blocklocation, blocknum, blockstate)
+                if downboolean :
+                  blocklocation[0] += 1
+                elif not downboolean :
+                  noncollision = False
 
             time.sleep(float(0.1)/speed/speed_up * 3)
 
-            '''for row in range(rows) :
-                print(area[row])
-            print("Cut")'''
+            #for row in range(rows) :
+            #    print(area[row])
+            #print("Cut")
 
             #if not hasattr(event, 'key') : 
             #    continue
