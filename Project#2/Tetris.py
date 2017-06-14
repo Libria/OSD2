@@ -111,7 +111,7 @@ tetrominoes[6]=[[
                 [1,1]]]
 #colors[6]=0xFFFF00
 
-def RawEnd(blocknum, blockstate) :
+def RowEnd(blocknum, blockstate) :
     return len(tetrominoes[blocknum][blockstate])
 
 def ColEnd(blocknum, blockstate) : 
@@ -272,7 +272,7 @@ def DownAll(rowsearch) :
             if (backrow == 0) :
                 area[0][col] = 0
             else : 
-                area[backrow][col] = area[backrow - 1][col]
+                area[backrow + 1][col] = area[backrow][col]
 
 def Run() : 
     gameover = False
@@ -293,7 +293,7 @@ def Run() :
                     lineall = Lineall()
                 #Downline()
 
-                blocknum = 0#randint(0, 6)
+                blocknum = randint(0, 6)
                 noncollision = True
                 InsertAreaBlock(blocknum)
                 blocklocation = [0, 3]
@@ -338,7 +338,7 @@ def Run() :
                     while (downboolean2) :
                         downboolean2 = DownBlock(blocklocation, blocknum, blockstate)
                         blocklocation[0] += 1
-                        if (blocklocation[0] == 20 - RawEnd(blocknum, blockstate)) : 
+                        if (blocklocation[0] == 20 - RowEnd(blocknum, blockstate)) : 
                             break
                     spacecheck = 1
                     CleanUp()
