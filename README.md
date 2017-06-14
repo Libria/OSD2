@@ -8,7 +8,8 @@ Documents
 
 > **project2**
 >
->  <img src="http://i64.tinypic.com/amphq8.png" height = "800" width = "400">
+>  <img src="http://i64.tinypic.com/amphq8.png" height = "400" width = "200">
+> ** **
 > - Simple Tetris
 >
 > **Function**
