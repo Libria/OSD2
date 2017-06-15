@@ -15,6 +15,8 @@ background = pygame.Surface(screen.get_size())
 background = background.convert()
 background.fill((10, 10, 10))
 speed = 0.5
+pygame.mixer.music.load('Tetris.mp3')
+pygame.mixer.music.play(-1,0.0)
 
 # 블럭들
 tetrominoes = [0, 0, 0, 0, 0, 0, 0]
@@ -280,6 +282,7 @@ def DownLine(rowsearch) :
 def Run() : 
     gameover = False
     noncollision = False
+
     while not gameover :
         for event in pygame.event.get() :
             if event.type == pygame.QUIT :
