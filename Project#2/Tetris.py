@@ -260,19 +260,22 @@ def Lineall() :
 
     return 0
 
-def DownAll(rowsearch) :
-    line = 0
-    rowsearch = 0
-    for col in range(cols) :
+def SwapLine(upper, lower) : 
+    temp = [[0 for col in range(cols)] for row in range(1)]
+
+    for col in range(cols) : 
+        temp[0][col] = area[lower][col]
+        area[lower][col] = area[upper][col]
+        area[upper][col] = area[lower][col]
+
+def DownLine(rowsearch) : 
+    for col in range(cols) : 
         area[rowsearch][col] = 0
 
-    for row in range(rowsearch) : 
-        for col in range(cols) :
-            backrow = rowsearch - row - 1
-            if (backrow == 0) :
-                area[0][col] = 0
-            else : 
-                area[backrow + 1][col] = area[backrow][col]
+    while (rowsearch > 0) :
+        SwapLine(rowsearch - 1, rowsearch)
+        rowsearch = rowsearch - 1
+
 
 def Run() : 
     gameover = False
@@ -289,9 +292,8 @@ def Run() :
             if (noncollision == False) :
                 lineall = Lineall()
                 while (lineall != 0) : 
-                    DownAll(lineall)
+                    DownLine(lineall)
                     lineall = Lineall()
-                #Downline()
 
                 blocknum = randint(0, 6)
                 noncollision = True
